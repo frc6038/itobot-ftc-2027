@@ -1,4 +1,16 @@
-## NOTICE
+## ITOBOT FTC Platform V1
+
+Team 6038 ITOBOT's 2026–2027 BIOBUZZ robot platform, built on the official FTC SDK 12.0 base.
+
+Team-owned code lives in `TeamCode/src/main/java/org/firstinspires/ftc/teamcode`. The platform provides a pure, tested mecanum drive core; REV hardware adapters; OTOS localization; target-relative AprilTag vision; and standalone bring-up diagnostics. Game-specific mechanisms and autonomous paths do not belong in this foundation.
+
+Start with [Architecture](docs/ARCHITECTURE.md), [Hardware and calibration](docs/HARDWARE.md), [branching](docs/BRANCHING.md), and [milestones](docs/MILESTONES.md). Before powering a drivetrain, run **ITOBOT Diag: Drive Motor Direction** with wheels clear of the floor.
+
+The upstream SDK is deliberately left intact. To update it, add the official FTC repository as `upstream`, fetch it, merge or rebase the desired SDK release into a temporary integration branch, resolve only isolated TeamCode/docs conflicts, run the TeamCode unit tests and assemble task, then merge through review. Do not copy platform code into `FtcRobotController` or edit shared Gradle files to make an update easier.
+
+---
+
+## FTC SDK notice
 
 This repository contains the public FTC SDK for the BIOBUZZ (2026-2027) competition season.
 

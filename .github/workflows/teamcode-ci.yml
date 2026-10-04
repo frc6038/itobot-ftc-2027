@@ -1,0 +1,20 @@
+name: TeamCode CI
+
+on:
+  pull_request:
+  push:
+    branches: [master, platform/2027-v1]
+
+jobs:
+  teamcode:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Test TeamCode pure logic
+        run: ./gradlew :TeamCode:testDebugUnitTest
+      - name: Assemble TeamCode debug APK
+        run: ./gradlew :TeamCode:assembleDebug
