@@ -23,6 +23,8 @@ public final class OtosLocalizer implements Localizer {
                 RobotConfig.Otos.OFFSET_Y_METERS, RobotConfig.Otos.OFFSET_HEADING_RADIANS));
         otos.setLinearScalar(RobotConfig.Otos.LINEAR_SCALAR);
         otos.setAngularScalar(RobotConfig.Otos.ANGULAR_SCALAR);
+        // Robot must be stationary and flat; matches official SensorSparkFunOTOS init order.
+        otos.calibrateImu();
         otos.resetTracking();
     }
 

@@ -33,13 +33,18 @@ public final class VisionPortalVisionIO implements VisionSystem {
     @Override
     public TargetObservation getLatestTarget() {
         List<AprilTagDetection> detections = aprilTagProcessor.getDetections();
-        if (detections.isEmpty()) {
-            return TargetObservation.NONE;
+        for (AprilTagDetection detection : detections) {
+            if (detection == null || detection.ftcPose == null) {
+                continue;
+            }
+            // Target-relative only: never convert tag pose into a field-absolute robot pose.
+            return new TargetObservation(true, identityOf(detection),
+                    detection.ftcPose.range * INCHES_TO_METERS,
+                    Math.toRadians(detection.ftcPose.bearing),
+                    Math.toRadians(detection.ftcPose.yaw),
+                    System.nanoTime());
         }
-        AprilTagDetection detection = detections.get(0);
-        String identity = identityOf(detection);
-        return new TargetObservation(true, identity, detection.ftcPose.range * INCHES_TO_METERS,
-                Math.toRadians(detection.ftcPose.bearing), Math.toRadians(detection.ftcPose.yaw), System.nanoTime());
+        return TargetObservation.NONE;
     }
 
     private static String identityOf(AprilTagDetection detection) {

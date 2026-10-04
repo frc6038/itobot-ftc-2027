@@ -5,6 +5,9 @@ public final class MathUtil {
     }
 
     public static double clamp(double value, double minimum, double maximum) {
+        if (!Double.isFinite(value)) {
+            return 0.0;
+        }
         return Math.max(minimum, Math.min(maximum, value));
     }
 }

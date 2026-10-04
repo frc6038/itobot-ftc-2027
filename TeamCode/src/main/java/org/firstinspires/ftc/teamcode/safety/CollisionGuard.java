@@ -20,9 +20,33 @@ public final class CollisionGuard {
         if (requested.forward <= 0.0) {
             return requested;
         }
-        double nearest = Math.min(frontLeftMeters, frontRightMeters);
+        double nearest = nearestValidMeters(frontLeftMeters, frontRightMeters);
+        if (!Double.isFinite(nearest)) {
+            // Both sensors invalid/stale: do not invent a stop that fights the driver during bring-up.
+            return requested;
+        }
         double scale = MathUtil.clamp((nearest - hardStopMeters) /
                 (slowdownStartMeters - hardStopMeters), 0.0, 1.0);
         return new DriveIntent(requested.strafe, requested.forward * scale, requested.rotation);
+    }
+
+    private static double nearestValidMeters(double frontLeftMeters, double frontRightMeters) {
+        boolean leftOk = isValidReading(frontLeftMeters);
+        boolean rightOk = isValidReading(frontRightMeters);
+        if (leftOk && rightOk) {
+            return Math.min(frontLeftMeters, frontRightMeters);
+        }
+        if (leftOk) {
+            return frontLeftMeters;
+        }
+        if (rightOk) {
+            return frontRightMeters;
+        }
+        return Double.NaN;
+    }
+
+    private static boolean isValidReading(double meters) {
+        // Finite and non-negative only. +Infinity from RevDistanceSensorIO means "no obstacle reading".
+        return Double.isFinite(meters) && meters >= 0.0;
     }
 }

@@ -8,15 +8,29 @@ import org.firstinspires.ftc.teamcode.vision.TargetObservation;
 public final class DriveAssistManager {
     private final AutoAlignController autoAlignController;
     private final CollisionGuard collisionGuard;
+    private final long maximumTargetAgeNanos;
 
-    public DriveAssistManager(AutoAlignController autoAlignController, CollisionGuard collisionGuard) {
+    public DriveAssistManager(AutoAlignController autoAlignController, CollisionGuard collisionGuard,
+                              long maximumTargetAgeNanos) {
+        if (maximumTargetAgeNanos <= 0L) {
+            throw new IllegalArgumentException("Target age limit must be positive");
+        }
         this.autoAlignController = autoAlignController;
         this.collisionGuard = collisionGuard;
+        this.maximumTargetAgeNanos = maximumTargetAgeNanos;
     }
 
     public DriveIntent apply(DriveIntent driverIntent, boolean autoAlignEnabled, TargetObservation target,
-                             double frontLeftMeters, double frontRightMeters) {
-        DriveIntent selected = autoAlignEnabled ? autoAlignController.calculate(target) : driverIntent;
+                             double frontLeftMeters, double frontRightMeters, long nowNanos) {
+        DriveIntent selected;
+        if (!autoAlignEnabled) {
+            selected = driverIntent;
+        } else if (target == null || !target.isFresh(nowNanos, maximumTargetAgeNanos)) {
+            // Assist engaged but target lost/stale: fail safe to stop rather than invent motion.
+            selected = DriveIntent.STOP;
+        } else {
+            selected = autoAlignController.calculate(target);
+        }
         return collisionGuard == null ? selected : collisionGuard.apply(selected, frontLeftMeters, frontRightMeters);
     }
 }

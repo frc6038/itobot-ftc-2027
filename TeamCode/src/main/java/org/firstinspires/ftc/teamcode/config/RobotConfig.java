@@ -50,6 +50,8 @@ public final class RobotConfig {
 
     public static final class Vision {
         public static final String CAMERA_NAME = "Webcam 1";
+        // Assist fails safe if the observation is older than this; tune with camera FPS.
+        public static final long MAX_TARGET_AGE_NANOS = 100_000_000L;
     }
 
     public static final class Safety {
