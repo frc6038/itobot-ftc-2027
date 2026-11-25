@@ -18,11 +18,22 @@ public final class RobotConfig {
         public static final DcMotor.Direction FRONT_RIGHT_DIRECTION = DcMotor.Direction.REVERSE;
         public static final DcMotor.Direction REAR_LEFT_DIRECTION = DcMotor.Direction.FORWARD;
         public static final DcMotor.Direction REAR_RIGHT_DIRECTION = DcMotor.Direction.REVERSE;
-        public static final boolean USE_ENCODERS = true;
+        public static final boolean USE_ENCODERS = false;
         public static final double INPUT_DEADBAND = 0.05;
         public static final double CUBIC_WEIGHT = 0.55;
         public static final double PRECISION_SCALE = 0.35;
         public static final double MANUAL_ROTATION_THRESHOLD = 0.04;
+    }
+
+    public static final class Intake {
+        public static final boolean ENABLED = true;
+        public static final String NAME = "intake";
+        public static final DcMotor.Direction DIRECTION =
+                DcMotor.Direction.FORWARD;
+
+        public static final double INTAKE_POWER = 0.25;
+        public static final double OUTTAKE_POWER = 0.25;
+        public static final double TRIGGER_DEADBAND = 0.10;
     }
 
     public static final class Imu {
